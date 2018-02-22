@@ -1,0 +1,80 @@
+package Panels;
+import javax.swing.*;
+import Fenetre.*;
+import Objets.Ballon;
+import Objets.Objet;
+import TIM.FenetreTIM;
+
+import java.awt.*;
+import java.io.*;
+import javax.imageio.*;
+import java.util.*;
+import java.awt.geom.*;
+import java.awt.image.BufferedImage;
+public class PanelJeu extends JPanel { 
+  Font popo=new Font("Tahoma",Font.BOLD,30);
+  public Image bg;
+  
+  public long t;
+  public FenetreTIM f;
+  
+  public Random r=new Random();
+  
+  
+  public PanelJeu(int l,int h,FenetreTIM f)
+  {
+    try
+    {  
+      bg=ImageIO.read(new File("data/fond.png"));
+    }
+    catch(Exception e)
+    {}
+    t=System.currentTimeMillis();
+    this.f=f;
+  }
+  
+  public void paintComponent(Graphics g2){
+    
+    Graphics2D g=(Graphics2D)g2;
+    super.paintComponent(g);
+    g.drawImage(bg,0,0,this);
+    
+    g.setColor(new Color(50,150,200));
+    g.setFont(popo);
+    if(f.isRunning)
+    {
+      g.drawString("Chrono :" +String.valueOf((System.currentTimeMillis()-t)/1000),1000,650);
+      
+    }
+    else
+    {
+      g.drawString("PAUSE",1000,650);
+      
+    }
+    
+    paintAllObjets(g);
+    
+    
+    
+  }  
+  void paintAllObjets(Graphics2D g)
+  {
+    Iterator<String> entrees=f.annuaire.keySet().iterator();  
+    while(entrees.hasNext())
+    {
+      f.annuaire.get(entrees.next()).get(0).paintAll(g);
+    }
+    
+  }
+  public void drawImageMaison(Graphics2D g,BufferedImage img,int x, int y,float angledeg ,float scalex,float scaley)
+  {
+    AffineTransform at = new AffineTransform();
+    at.translate(x, y);
+    at.translate(img.getWidth()/2*scalex, img.getHeight()/2*scaley);
+    at.scale(scalex,scaley);
+    at.rotate(-angledeg/180.0*Math.PI);
+    
+    at.translate(-img.getWidth()/2, -img.getHeight()/2);
+    g.drawImage(img,at,null);
+  }
+}

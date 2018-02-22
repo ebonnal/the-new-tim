@@ -1,0 +1,238 @@
+package TIM;
+import Panneau.*;
+
+import javax.imageio.ImageIO;
+import javax.swing.*;
+
+import Objets.Ballon;
+import Objets.Objet;
+import Panels.PanelJeu;
+
+import java.awt.*;
+import java.awt.event.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.util.*;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
+import Thread2.*;
+
+public class FenetreTIM extends JFrame implements Objet {
+  public  float gravite=550; //acceleration en en pixels.s^-2 selon y
+  public  boolean b=true; //bool qui régit les boucles des threads
+  public  PanelJeu pJeu;
+  public  int w,h;
+  public int fps;
+  public  BufferedImage sprites;
+  public long t;
+  public boolean isRunning=false;
+  //Annuaire objets :
+  public  HashMap<String,ArrayList<Objet>> annuaire;
+  public FenetreTIM()
+  {
+    
+    super("The Incredible Machine");
+    this.setResizable(false);
+    w=1200;h=700;fps=120;t=System.currentTimeMillis();
+    annuaire=new HashMap<String,ArrayList<Objet>>();
+    try{sprites=ImageIO.read(new File("data/sprites.png"));}
+    catch(Exception e){}
+    
+    
+    this.setLocationRelativeTo(null);               
+    this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    getContentPane().setLayout(null);
+    
+    startJeu();
+    
+    
+  }
+  
+  
+  public float accelModifX(Objet o)
+  {
+    return 0;
+  }
+  
+  public float accelModifY(Objet o)
+  {
+    return o.getCoefGravite()*gravite;
+  }
+  
+  
+  public void majEffetsDiscontinusModif(Objet o)
+  {
+    if(o.gety()>700-o.getSprite().getHeight() && o.getVy()>0)
+    {
+      o.sety(700.0f-o.getSprite().getHeight());
+      
+      o.setVx((float) (0.8*o.getVx()));
+      o.setVy((float) (-0.8*o.getVy()));
+      if(o instanceof Ballon)
+      {
+        o.setVAngle(-(float)(360*o.getVx()/2/Math.PI/o.getSprite().getHeight()*2));
+      }
+    }
+    if(o.gety()<0 && o.getVy()<0)
+    {
+      o.sety(0);
+      
+      o.setVx((float) (0.8*o.getVx()));
+      o.setVy((float) (-0.8*o.getVy()));  
+      if(o instanceof Ballon)
+      {
+        o.setVAngle((float)(360*o.getVx()/2/Math.PI/o.getSprite().getHeight()*2));
+      }
+    }
+    
+    if(o.getx()>700-o.getSprite().getWidth() && o.getVx()>0)
+    {
+      o.setx(700.0f-o.getSprite().getWidth());
+      
+      o.setVx((float) (-0.8*o.getVx()));
+      o.setVy((float) (0.8*o.getVy()));
+      if(o instanceof Ballon)
+      {
+        o.setVAngle((float)(360*o.getVy()/2/Math.PI/o.getSprite().getHeight()*2));
+      }
+    }
+    if(o.getx()<0 && o.getVx()<0)
+    {
+      o.setx(0);
+      
+      o.setVx((float) (-0.8*o.getVx()));
+      o.setVy((float) (0.8*o.getVy()));
+      if(o instanceof Ballon)
+      {
+        o.setVAngle(-(float)(360*o.getVy()/2/Math.PI/o.getSprite().getHeight()*2));
+      }
+    }
+    
+  }
+  public void addAccelModifiers(Objet o){}
+  public void addVitesseModifiers(Objet o){}
+  public float getVAngle(){return 0;}
+  public void setVAngle(float i){}
+  public float getx(){return 0f;}
+  public float getVx(){return 0f;}
+  public void setx(float nx){}
+  public void setVx(float nvx){}
+  public float gety(){return 0f;}
+  public float getVy(){return 0f;}
+  public void sety(float ny){}
+  public void setVy(float nvy){}
+  public BufferedImage getSprite(){return null;};
+  public float getCoefGravite(){return 0;}
+  public boolean estActif(){return true;}
+  public void majEffetsDiscontinus(){}
+  public void paintAll(Graphics2D g){}
+  public float accelX(){return 0;}
+  public float accelY(){return 0;}
+  public void threadStart(){}
+  public void threadResetPause(){}
+  
+  
+  public void startJeu()
+  {
+    
+    while(b)
+    {
+      this.getContentPane().setPreferredSize(new Dimension(w, h));
+      this.pack();
+      
+      
+      JButton go = new JButton();
+      getContentPane().add(go);
+      go.setSize(112,112);
+      go.setIcon(new ImageIcon("data/go.png" ));
+      go.setLocation(800,20);
+      
+      JButton stop = new JButton();
+      getContentPane().add(stop);
+      stop.setSize(112,112);
+      stop.setIcon(new ImageIcon("data/stop.png" ));
+      stop.setLocation(1200-100-112,20);
+      
+      pJeu=new PanelJeu(1200,700,this);
+      getContentPane().add(pJeu);
+      pJeu.setSize(w, h);
+      pJeu.setLocation(0,0);
+      
+      Ballon bal=new Ballon(800,140,4000,-500,360,this);
+      
+      Ballon bal2=new Ballon(800,200,4000,-500,360,this);
+      
+      Ballon bal3=new Ballon(800,250,100,0,360,this);
+      Ballon bal4=new Ballon(800,300,-100,0,360,this);
+      Ballon bbal=new Ballon(1000,140,4000,-500,360,this);
+      
+      Ballon bbal2=new Ballon(1000,200,4000,-500,360,this);
+      
+      Ballon bbal3=new Ballon(1000,250,100,0,360,this);
+      Ballon bbal4=new Ballon(1000,300,-100,0,360,this);
+      go.addMouseListener(
+                          new MouseAdapter() 
+                            {
+        public void mousePressed(MouseEvent e) 
+        {
+          isRunning=true;
+          pJeu.t=System.currentTimeMillis();
+          Iterator<String> entrees=annuaire.keySet().iterator();  
+          while(entrees.hasNext())
+          {
+            String currEntrees=entrees.next();
+            for(int i=0;i<annuaire.get(currEntrees).size();i++)
+            {
+              annuaire.get(currEntrees).get(i).threadStart();
+            }
+          }       
+        }
+      }
+      );
+      stop.addMouseListener(
+                            new MouseAdapter() 
+                              {
+        public void mousePressed(MouseEvent e) 
+        {
+          isRunning=false;
+          Iterator<String> entrees=annuaire.keySet().iterator();  
+          while(entrees.hasNext())
+          {
+            String currEntrees=entrees.next();
+            for(int i=0;i<annuaire.get(currEntrees).size();i++)
+            {
+              annuaire.get(currEntrees).get(i).threadResetPause();
+            }
+          } 
+          
+          
+        }
+      }
+      );
+      
+      this.setVisible(true);
+      while(b)
+      {
+        
+        if(System.currentTimeMillis()-t>1000.0/fps)
+        {
+          //System.out.println(System.currentTimeMillis()-t);
+          t=System.currentTimeMillis();
+          getContentPane().revalidate();
+          getContentPane().repaint();
+        }
+        
+        //section critique
+        
+        //Thread.yield();
+      }
+    }
+    
+    
+    
+    
+  }
+  
+  
+}

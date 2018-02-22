@@ -1,0 +1,31 @@
+package Objets;
+
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+
+public interface Objet {
+  public void addAccelModifiers(Objet o);
+  public void addVitesseModifiers(Objet o);
+  public float getVAngle();
+  public void setVAngle(float i);
+  public float getx();
+  public float getVx();
+  public void setx(float i);
+  public void setVx(float i);
+  public float gety();
+  public float getVy();
+  public void sety(float i);
+  public void setVy(float i);
+  public float getCoefGravite();
+  public BufferedImage getSprite();
+  public boolean estActif();
+  public void threadStart();
+  public void threadResetPause();
+  public void paintAll(Graphics2D g);
+  public float accelModifX(Objet o);
+  public float accelModifY(Objet o);
+  public void majEffetsDiscontinusModif(Objet o);
+  public float accelX();
+  public float accelY();
+  public void majEffetsDiscontinus();
+}

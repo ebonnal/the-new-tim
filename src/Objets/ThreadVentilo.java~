@@ -1,0 +1,79 @@
+package Objets;
+
+import TIM.FenetreTIM;
+
+public class ThreadVentilo extends Thread
+{
+  FenetreTIM f;
+  Ballon bal;
+  long t;
+  public int threadState=-2;//0:jamais encore lancé mais lancable 1: lancé -1: en pause -2:pas lancable(objet dans menu)
+  public ThreadVentilo(FenetreTIM f,Ballon bal)
+  {
+    
+    this.f=f;
+    this.bal=bal;
+    t=System.currentTimeMillis();
+  }
+  public void run()
+  {
+    
+    while(f.b)
+    {
+      
+      while(f.b && threadState==1)
+      {
+        if(bal.estActif())
+        {
+          if(System.currentTimeMillis()-t>3000.0/(f.fps))
+          {
+            
+            t=System.currentTimeMillis();
+            bal.ay=bal.accelY();
+            bal.ax=bal.accelX();
+            bal.angle+=bal.vangle*(3.0/(f.fps));
+            bal.vx+=bal.ax*(3.0/(f.fps));
+            bal.x+=bal.vx*(3.0/(f.fps));
+            bal.vy+=bal.ay*(3.0/(f.fps));
+            bal.y+=bal.vy*(3.0/(f.fps));
+            bal.majEffetsDiscontinus();
+            //System.out.println(bal.y);
+            
+          }
+          /*if(System.currentTimeMillis()-t>5000.0/(f.fps))
+           {
+           
+           t=System.currentTimeMillis();
+           bal.ay=bal.accelY();
+           bal.ax=bal.accelX();
+           
+           bal.angle+=bal.vangle*(1.0/(f.fps));
+           bal.vx+=bal.ax*(1.0/(f.fps));
+           bal.x+=bal.vx*(1.0/(f.fps));
+           bal.vy+=bal.ay*(1.0/(f.fps));
+           bal.y+=bal.vy*(1.0/(f.fps));  
+           //System.out.println(bal.y);
+           
+           }*/
+          
+        }
+        
+        /*
+         if(bal.y>700-32 && bal.vy>0)
+         {
+         bal.y=700-32;
+         bal.vy=(float) (-0.3*bal.vy);
+         }
+         */
+        
+        
+        Thread.yield();
+      }
+      while(threadState==-1)
+      {
+        Thread.yield();
+      }
+    }
+    
+  }
+}

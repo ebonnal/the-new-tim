@@ -1,0 +1,360 @@
+package Objets;
+
+import java.awt.Graphics2D;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Iterator;
+
+import javax.imageio.ImageIO;
+
+import TIM.FenetreTIM;
+
+public class Ballon extends MouseAdapter implements Objet{
+  
+  public ArrayList<Objet> accelModifiers;
+  public ArrayList<Objet> vitesseModifiers;
+  public BufferedImage sprite;
+  public boolean estActif=false;
+  public float coefGravite=1;
+  public float x,y;
+  public float angle,vangle;
+  public float vx,vy;
+  public float ax,ay;
+  public float xi,yi;
+  public float anglei,vanglei;
+  public float vxi,vyi;
+  public float axi,ayi;
+  public boolean isDragged;
+  FenetreTIM f;
+  public ThreadBallon thread;
+  
+  public Ballon(float x , float y, float vx,float vy,float vangle ,FenetreTIM f)
+  {
+    f.pJeu.addMouseListener(this);
+    f.pJeu.addMouseMotionListener(this);
+    accelModifiers=new ArrayList<Objet>();
+    vitesseModifiers=new ArrayList<Objet>();
+    accelModifiers.add(f);
+    vitesseModifiers.add(f);
+    
+    Iterator<String> entrees=f.annuaire.keySet().iterator();  
+    while(entrees.hasNext())
+    {
+      String currEntrees=entrees.next();
+      for(int i=0;i<f.annuaire.get(currEntrees).size();i++)
+      {
+        if(f.annuaire.get(currEntrees).get(i) instanceof Ballon)
+        {
+          f.annuaire.get(currEntrees).get(i).addVitesseModifiers(this);
+          f.annuaire.get(currEntrees).get(i).addAccelModifiers(this);
+          accelModifiers.add(f.annuaire.get(currEntrees).get(i));
+          vitesseModifiers.add(f.annuaire.get(currEntrees).get(i));
+          
+        }
+        else
+        {
+          f.annuaire.get(currEntrees).get(i).addVitesseModifiers(this);
+          f.annuaire.get(currEntrees).get(i).addAccelModifiers(this);
+          accelModifiers.add(f.annuaire.get(currEntrees).get(i));
+          vitesseModifiers.add(f.annuaire.get(currEntrees).get(i));
+        }
+      }
+    }
+    this.isDragged=false;
+    this.x=x;
+    this.y=y;
+    this.vx=vx;
+    this.vy=vy;
+    this.ax=0;
+    this.ay=0;
+    this.xi=x;
+    this.yi=y;
+    this.vxi=vx;
+    this.vyi=vy;
+    this.axi=0;
+    this.ayi=0;
+    this.angle=0;
+    this.anglei=0;
+    this.vangle=vangle;
+    this.vanglei=vangle;
+    this.f=f;
+    thread=new ThreadBallon(f,this);
+    
+    if((f.annuaire).containsKey("Ballons"))
+    {
+      f.annuaire.get("Ballons").add((Objet)this);
+    }
+    else
+    {
+      f.annuaire.put("Ballons", new ArrayList<Objet>());
+      f.annuaire.get("Ballons").add((Objet)this);
+    }
+    
+    try
+    {
+      sprite=ImageIO.read(new File("data/sprites.png"));
+      sprite=sprite.getSubimage(67, 14, 32, 32);
+    }
+    catch(Exception e)
+    {}
+  }
+  public void mousePressed(MouseEvent e)
+  {
+    if(!f.isRunning)
+    {
+      if(x+sprite.getWidth()>e.getX() && e.getX()>x && y+sprite.getHeight()>e.getY() && e.getY()>y)
+      {
+        isDragged=true;
+      }
+    }
+  }
+  public void mouseReleased(MouseEvent e)
+  {
+    if(!f.isRunning)
+    {
+      if(isDragged && x+sprite.getWidth()<700 && x>0 && y+sprite.getHeight()<700 && y>0 )
+      {
+        if(thread.threadState==-2)thread.threadState=0;
+      }
+      isDragged=false; 
+    }
+  }
+  
+  public void mouseDragged(MouseEvent e)
+  {
+    if(!f.isRunning)
+    {
+      if(isDragged)
+      { 
+        x=e.getX();
+        y=e.getY();
+      }
+    }
+  }
+  public void addAccelModifiers(Objet o)
+  {
+    accelModifiers.add(o);
+  }
+  public void addVitesseModifiers(Objet o)
+  {
+    vitesseModifiers.add(o);
+  }
+  public float getVAngle(){return vangle;}
+  public void setVAngle(float i){vangle=i;}
+  public float getx(){return x;}
+  public float getVx(){return vx;}
+  public void setx(float nx){x=nx;}
+  public void setVx(float nvx){vx=nvx;}
+  public float gety(){return y;}
+  public float getVy(){return vy;}
+  public void sety(float ny){y=ny;}
+  public void setVy(float nvy){vy=nvy;}
+  
+  public float getCoefGravite()
+  {
+    return coefGravite;
+  }
+  public boolean estActif()
+  {
+    return estActif; 
+  }
+  public BufferedImage getSprite()
+  {
+    return sprite;
+  }
+  public void threadResetPause()
+  {
+    estActif=false;
+    x=xi;
+    y=yi;
+    vx=vxi;
+    vy=vyi;
+
+    ax=axi;
+    ay=ayi;
+    angle=anglei;
+    vangle=vanglei;
+    if(thread.threadState==1)thread.threadState=-1;
+  }
+  
+  public void threadStart()
+  {
+  
+    if(x+sprite.getWidth()<=700 && x>=0 && y+sprite.getHeight()<=700 && y>=0 )
+    {
+      estActif=true;
+      
+    }
+    if(thread.threadState==0)
+    {
+      xi=x;
+      yi=y;
+      thread.threadState=1;
+      thread.start();
+    }
+    if(thread.threadState==-1)
+    {
+      xi=x;
+      yi=y;
+      thread.threadState=1;
+    }
+  }
+  public float accelX()
+  {
+    float accel=0;
+    for(int i=0;i<accelModifiers.size();i++)
+    {
+      if(accelModifiers.get(i).estActif())
+      {
+        accel+=accelModifiers.get(i).accelModifX(this);
+      }
+    }
+    return accel;
+  }
+  public float accelY()
+  {
+    float accel=0;
+    for(int i=0;i<accelModifiers.size();i++)
+    {
+      if(accelModifiers.get(i).estActif())
+      {
+        accel+=accelModifiers.get(i).accelModifY(this);
+      }
+    }
+    return accel;
+  }
+  public float accelModifX(Objet o)
+  {
+    if(o instanceof Ballon)
+    {
+      
+      float x1=x+sprite.getWidth()/2;
+      float x2=o.getx()+o.getSprite().getWidth()/2;
+      float y1=y+sprite.getHeight()/2;
+      float y2=o.gety()+o.getSprite().getHeight()/2;
+      
+      if(Math.pow(x1-x2,2)+Math.pow(y1-y2,2)<Math.pow((sprite.getHeight()),2))
+      {
+        float normx=(x2-x1)/sprite.getHeight();
+        float normy=(y2-y1)/sprite.getHeight();
+        float normnorm=norme(normx,normy);
+        normx=normx/normnorm;
+        return 1000*(sprite.getHeight()-norme(x1-x2,y1-y2))*normx;
+      }
+    }
+    return 0;
+  }
+  public float accelModifY(Objet o)
+  {
+    if(o instanceof Ballon)
+    {
+      
+      float x1=x+sprite.getWidth()/2;
+      float x2=o.getx()+o.getSprite().getWidth()/2;
+      float y1=y+sprite.getHeight()/2;
+      float y2=o.gety()+o.getSprite().getHeight()/2;
+      
+      if(Math.pow(x1-x2,2)+Math.pow(y1-y2,2)<Math.pow((sprite.getHeight()),2))
+      {
+        float normx=(x2-x1)/sprite.getHeight();
+        float normy=(y2-y1)/sprite.getHeight();
+        float normnorm=norme(normx,normy);
+        normy=normy/normnorm;
+        return 1000*(sprite.getHeight()-norme(x1-x2,y1-y2))*normy;
+      }
+    }
+    return 0;
+  }
+  public void majEffetsDiscontinus()
+  {
+    for(int i=0;i<vitesseModifiers.size();i++)
+    {
+      if(vitesseModifiers.get(i).estActif())
+      {
+        vitesseModifiers.get(i).majEffetsDiscontinusModif(this);
+      }
+    }
+    
+  }
+  public void majEffetsDiscontinusModif(Objet o)
+  {
+    /*
+     if(o instanceof Ballon)
+     {
+     
+     float x1=x+sprite.getWidth()/2;
+     float x2=o.getx()+o.getSprite().getWidth()/2;
+     float y1=y+sprite.getHeight()/2;
+     float y2=o.gety()+o.getSprite().getHeight()/2;
+     
+     if(Math.pow(x1-x2,2)+Math.pow(y1-y2,2)<Math.pow((sprite.getHeight()),2))
+     {
+     float normx=(x2-x1)/sprite.getHeight();
+     float normy=(y2-y1)/sprite.getHeight();
+     float normnorm=norme(normx,normy);
+     normx=normx/normnorm;
+     normy=normy/normnorm;
+     o.setx(x1+normx*sprite.getHeight()+signedUnity(normx)-sprite.getWidth()/2);
+     o.sety(y1+normy*sprite.getHeight()+signedUnity(normy)-sprite.getWidth()/2);
+     
+     float scalNormVit1=-normx*getVx()+-normy*getVy();
+     float scalNormVit2=normx*o.getVx()+normy*o.getVy();
+     
+     float moyVit= (norme(vx,vy)+norme(o.getVx(),o.getVy()))/2.0f;
+     
+     setVx(vx-2*scalNormVit1*(-normx));
+     setVy(vy-2*scalNormVit1*(-normy));
+     o.setVx(o.getVx()-2*scalNormVit2*normx);
+     o.setVy(o.getVy()-2*scalNormVit2*normy);
+     
+     setVx(vx/norme(vx,vy)*moyVit);
+     setVy(vy/norme(vx,vy)*moyVit);
+     o.setVx(o.getVx()*moyVit/norme(o.getVx(),o.getVy()));
+     o.setVy(o.getVy()*moyVit/norme(o.getVx(),o.getVy()));
+     
+     setVAngle(-o.getVAngle());
+     
+     x1=x+sprite.getWidth()/2;
+     x2=o.getx()+o.getSprite().getWidth()/2;
+     y1=y+sprite.getHeight()/2;
+     y2=o.gety()+o.getSprite().getHeight()/2;
+     System.out.println(Math.pow(x1-x2,2)+Math.pow(y1-y2,2)<Math.pow((sprite.getHeight()),2));
+     }
+     }*/
+  }
+  public static int signedUnity(float f)
+  {
+    if (f>0)
+    {return 1;}
+    else if(f==0f)
+    {return 0;}
+    return -1;
+  }
+  public static float norme(float fx,float fy)
+  {
+    return((float)Math.pow(Math.pow(fx,2)+Math.pow(fy,2), 0.5));
+  }
+  public static float norme(double fx,double fy)
+  {
+    return((float)Math.pow(Math.pow(fx,2)+Math.pow(fy,2), 0.5));
+  }
+  public void paintAll(Graphics2D g)
+  {
+    
+    if((f.annuaire).containsKey("Ballons"))
+    {
+      
+      for(int i=0;i<(f.annuaire.get("Ballons").size());i++)
+      {
+        f.pJeu.drawImageMaison(g, ((Ballon)((f.annuaire).get("Ballons").get(i))).sprite, (int)((Ballon)((f.annuaire).get("Ballons").get(i))).x,
+                               (int)((Ballon)((f.annuaire).get("Ballons").get(i))).y,  (int)((Ballon)((f.annuaire).get("Ballons").get(i))).angle, 1,1);
+      }
+    }
+    
+  }
+  
+}
