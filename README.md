@@ -1,4 +1,4 @@
-# Blopolo
+# TheNewTIM
 ## Overview
 This is an adaptation of "The Incredible Machine" with increased multithreaded physical engine. About 40 levels available !
 
