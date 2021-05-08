@@ -4,6 +4,8 @@
 ## Overview
 This is an adaptation of "The Incredible Machine" with increased multithreaded physical engine. About 40 levels available !
 
+/!\ most of the code base is in french because this project has been developed during my early university years in France !
+
 ## Features
 - Multithreaded physical engine
 - Rotation taken into account during collisions
@@ -21,7 +23,7 @@ You have to put inside the bucket(s) all the *Balloons* involved in the level !
 - Java 7+
 
  1. Compile it with your favorite IDE
- 2. Run `Main.class` !
+ 2. Run `com.enzobnl.tntim.Main.class` !
 
 ## Screens
 Tutorial
