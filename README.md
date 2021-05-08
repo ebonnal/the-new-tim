@@ -27,10 +27,10 @@ You have to put inside the bucket(s) all the *Balloons* involved in the level !
 
 ## Screens
 Tutorial
-![tuto1](https://github.com/EnzoBnl/TheNewTIM/blob/master/data/tuto1.png)
-![tuto2](https://github.com/EnzoBnl/TheNewTIM/blob/master/data/tuto2.png)
+![tuto1](https://github.com/EnzoBnl/TheNewTIM/blob/master/src/main/resources/data/tuto1.png)
+![tuto2](https://github.com/EnzoBnl/TheNewTIM/blob/master/src/main/resources/data/tuto2.png)
 
 Example of levels
-![screen11](https://github.com/EnzoBnl/TheNewTIM/blob/master/data/screens/11.png)
-![screen8](https://github.com/EnzoBnl/TheNewTIM/blob/master/data/screens/8.png)
-![screen7](https://github.com/EnzoBnl/TheNewTIM/blob/master/data/screens/7.png)
+![screen11](https://github.com/EnzoBnl/TheNewTIM/blob/master/src/main/resources/data/screens/11.png)
+![screen8](https://github.com/EnzoBnl/TheNewTIM/blob/master/src/main/resources/data/screens/8.png)
+![screen7](https://github.com/EnzoBnl/TheNewTIM/blob/master/src/main/resources/data/screens/7.png)

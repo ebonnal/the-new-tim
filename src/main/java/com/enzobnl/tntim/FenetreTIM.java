@@ -168,7 +168,6 @@ public class FenetreTIM extends JFrame implements Objet {// cf interface Objet
         annuaireReserve = new HashMap<String, ArrayList<Objet>>();
 
         this.setLocation(0, 0);
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         getContentPane().setLayout(null);
         //Fullscreen:
         //fullScreen(this);
