@@ -15,15 +15,27 @@ This is an adaptation of "The Incredible Machine" with increased multithreaded p
 - You can visualize solution if you are locked ! Or simply go to next level ;)
 - You can create you own levels with the **EDITOR MODE** !
 
-## Goal
+## Game Goal
 Solve them all !
 You have to put inside the bucket(s) all the *Balloons* involved in the level !
-## Test it
-**Requires:** 
-- Java 7+
 
- 1. Compile it with your favorite IDE
- 2. Run `com.enzobnl.tntim.Main.class` !
+## Build
+
+```bash
+find -name '*.java' > sources.txt
+mkdir output
+javac -encoding ISO-8859-1 -d output @sources.txt
+cp -r src/main/resources/* output
+cd ./output
+jar cmf ../manifest.mf thethetim.jar com data
+```
+
+## Run
+
+```bash
+cd ./output
+java -jar thethetim.jar
+```
 
 ## Screens
 Tutorial

@@ -1,8 +1,8 @@
-package com.enzobnl.tntim.threads;
+package com.bonnalenzo.tntim.threads;
 
-import com.enzobnl.tntim.FenetreTIM;
-import com.enzobnl.tntim.items.Panier;
-import com.enzobnl.tntim.util.Vector;
+import com.bonnalenzo.tntim.util.Vector;
+import com.bonnalenzo.tntim.FenetreTIM;
+import com.bonnalenzo.tntim.items.Panier;
 
 public class ThreadPanier extends Thread {
 

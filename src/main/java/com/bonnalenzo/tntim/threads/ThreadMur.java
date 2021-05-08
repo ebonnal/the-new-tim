@@ -1,8 +1,8 @@
-package com.enzobnl.tntim.threads;
+package com.bonnalenzo.tntim.threads;
 
 
-import com.enzobnl.tntim.FenetreTIM;
-import com.enzobnl.tntim.items.Mur;
+import com.bonnalenzo.tntim.items.Mur;
+import com.bonnalenzo.tntim.FenetreTIM;
 
 public class ThreadMur extends Thread {
 

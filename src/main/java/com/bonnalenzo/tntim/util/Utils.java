@@ -1,4 +1,4 @@
-package com.enzobnl.tntim.util;
+package com.bonnalenzo.tntim.util;
 
 import javax.swing.JFrame;
 

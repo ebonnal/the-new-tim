@@ -1,8 +1,8 @@
-package com.enzobnl.tntim.items;
+package com.bonnalenzo.tntim.items;
 
-import com.enzobnl.tntim.FenetreTIM;
-import com.enzobnl.tntim.threads.ThreadMur;
-import com.enzobnl.tntim.util.Vector;
+import com.bonnalenzo.tntim.FenetreTIM;
+import com.bonnalenzo.tntim.threads.ThreadMur;
+import com.bonnalenzo.tntim.util.Vector;
 
 import java.awt.Graphics2D;
 import java.awt.event.MouseAdapter;
@@ -11,10 +11,10 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import static com.enzobnl.tntim.util.Utils.angle;
-import static com.enzobnl.tntim.util.Utils.norme;
-import static com.enzobnl.tntim.util.Utils.signedUnity;
-import static com.enzobnl.tntim.util.Utils.sinus;
+import static com.bonnalenzo.tntim.util.Utils.angle;
+import static com.bonnalenzo.tntim.util.Utils.norme;
+import static com.bonnalenzo.tntim.util.Utils.signedUnity;
+import static com.bonnalenzo.tntim.util.Utils.sinus;
 
 public class Mur extends MouseAdapter implements Objet {
     public boolean estFixe;

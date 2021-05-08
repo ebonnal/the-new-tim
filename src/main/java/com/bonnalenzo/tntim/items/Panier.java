@@ -1,8 +1,9 @@
-package com.enzobnl.tntim.items;
+package com.bonnalenzo.tntim.items;
 
-import com.enzobnl.tntim.FenetreTIM;
-import com.enzobnl.tntim.threads.ThreadPanier;
-import com.enzobnl.tntim.util.Vector;
+import com.bonnalenzo.tntim.threads.ThreadPanier;
+import com.bonnalenzo.tntim.util.Utils;
+import com.bonnalenzo.tntim.util.Vector;
+import com.bonnalenzo.tntim.FenetreTIM;
 
 import java.awt.Graphics2D;
 import java.awt.event.MouseAdapter;
@@ -10,8 +11,6 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Iterator;
-
-import static com.enzobnl.tntim.util.Utils.norme;
 
 
 public class Panier extends MouseAdapter implements Objet {
@@ -400,10 +399,10 @@ public class Panier extends MouseAdapter implements Objet {
             if (Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2) < Math.pow((o.getH() / 2 + (getH() + getW()) / 3.5f), 2)) {
                 float normx = (x2 - x1) / ((getH() + getW()) / 3.5f + o.getH() / 2);
                 float normy = (y2 - y1) / ((getH() + getW()) / 3.5f + o.getH() / 2);
-                float normnorm = norme(normx, normy);
+                float normnorm = Utils.norme(normx, normy);
                 normx = normx / normnorm;
                 normy = normy / normnorm;
-                float temp = 1000 * ((o.getH() / 2 + (getH() + getW()) / 3.5f) - norme(x1 - x2, y1 - y2));
+                float temp = 1000 * ((o.getH() / 2 + (getH() + getW()) / 3.5f) - Utils.norme(x1 - x2, y1 - y2));
 
                 if (etat == 0) {
                     if (y2 < y1) {
@@ -444,12 +443,12 @@ public class Panier extends MouseAdapter implements Objet {
             if (Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2) < Math.pow((o.getH() / 2 + (getH() + getW()) / 3.5f), 2)) {
                 float normx = (x2 - x1) / ((getH() + getW()) / 3.5f + o.getH() / 2);
                 float normy = (y2 - y1) / ((getH() + getW()) / 3.5f + o.getH() / 2);
-                float normnorm = norme(normx, normy);
+                float normnorm = Utils.norme(normx, normy);
                 normx = normx / normnorm;
                 normy = normy / normnorm;
                 o.setVx(0.95f * o.getVx());
                 o.setVy(0.95f * o.getVy());
-                float temp = 1000 * ((o.getH() / 2 + (getH() + getW()) / 3.5f) - norme(x1 - x2, y1 - y2));
+                float temp = 1000 * ((o.getH() / 2 + (getH() + getW()) / 3.5f) - Utils.norme(x1 - x2, y1 - y2));
                 return new Vector(temp * normx, temp * normy);
             }
 

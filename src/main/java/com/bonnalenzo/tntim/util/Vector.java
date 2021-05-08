@@ -1,4 +1,4 @@
-package com.enzobnl.tntim.util;
+package com.bonnalenzo.tntim.util;
 
 /**
  * Represents a point coordinate, a speed vector or an acceleration/force vector
